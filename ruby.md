@@ -312,7 +312,7 @@ B.say_hello
 - `module` ngoài chức năng gộp thành nhóm các phương thức để sử dụng bởi lớp, nó cũng dùng để nhóm các lớp vào một tên module, kỹ thuật này gọi là Namespace. Để truy cập đến một lớp trong Module dùng ký hiệu ::
 
 ```ruby
-module Mammal
+module Animal
   class Dog
     def speak
       puts "Woof!"
@@ -326,8 +326,8 @@ module Mammal
   end
 end
 
-a = Mammal::Dog.new
-b = Mammal::Cat.new
+a = Animal::Dog.new
+b = Animal::Cat.new
 
 a.speak  # "Woof"
 b.speak  # "Meow"
@@ -727,3 +727,52 @@ t.call
   proc_math # => 2
   lambda_math # => 4
   ```
+
+## Phân biệt nil?, empty? và blank? trong ruby
+
+### 1. nil?
+
+- Method của `ruby`, sd trên mọi `obj`
+- Chỉ trả về `true` nếu đó là `nil`
+
+### 2. empty?
+
+- Method của `ruby`, sd trên các *collection* như `Array, Hash`; có thể sd vs `String` (vì là 1 mảng các character)...; **Lưu ý**: ko sd dc với `Enumerable`
+- Trả về `true` khi *collection* không có phần tử nào
+- Raise exception nếu obj đó `nil`
+
+### 3. blank?
+
+- Method của `rails`
+- Trả về `true` với obj có gtri `nil` và `false`; khi `Array, Hash` empty?
+- `String.blank?` != `String.empty?` khác vì `blank?` xử lý cả khoảng trắng
+
+## Singleton method
+
+- Là những methods được định nghĩa riêng cho từng `instance`
+- Được lưu trong `singleton_class`
+
+```ruby
+obj = Object.new
+
+def obj.my_singleton_method
+  puts "Singleton method"
+end
+
+obj.my_singleton_method
+```
+
+- Cách định nghĩa và gọi khá giống `class method` => `class method` hay dùng chính là singleton method của class đó
+
+## Eigenclass
+
+- Khi định nghĩa một `singleton method`, `ruby` sẽ tạo một `eigenclass` cho đối tượng đó
+- `singleton method` sẽ được lưu trữ trong `eigenclass`
+
+## Self
+
+- `Self` là một biến đặc biệt trỏ đến đối tượng sở hữu đang thực thi
+
+## Attr_accessor, attr_reader và attr_writer trong ruby
+
+- Chính là cách định nghĩa `getter, setter`
