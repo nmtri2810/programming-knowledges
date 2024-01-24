@@ -11,23 +11,23 @@
 
 ### Giao thức HTTP
 
-- Là 1 giao thức giữa hoạt động dựa trên mô hình Client – Server
+- Là 1 giao thức giữa hoạt động dựa trên mô hình Client – Server, HTTP status code
 
 ### Kiến trúc REST
 
 - Viết tắt cho **RE**presentational **S**tate **T**ransfer
-- `REST` là một kiến trúc phần mềm được thiết kế để tạo ra các website thông qua giao thức HTTP
-- Tuân thủ 4 nguyên tắc:
-  - Sử dụng các HTTP method (GET, POST, PUT/PATCH, DELETE)
-  - Stateless
-  - Hiển thị cấu trúc thư mục như URI
-  - Tập trung vào **tài nguyên**
+- `REST` là một kiến trúc phần mềm, định nghĩa các quy tắc để tạo ra các web service chú trọng vào **tài nguyên hệ thống**
+- Trong kiến trúc `REST`, mọi thứ đề được coi là `resources`
 
 ### RESTful trong rails
 
 - `RESTful` là tên gọi của các ứng dụng được phát triển dưới kiến trúc `REST`
-- TRong rails, routes sử dụng các phương thức HTTP một cách rõ ràng, có 7 action chính
-- Controller chuẩn RESTful
+- TRong rails, routes sử dụng các phương thức HTTP một cách rõ ràng, có 7 action chính, controller chuẩn RESTful
+- Quy tắc:
+  - Truy cập tài nguyên thông qua `id`
+  - Sử dụng các HTTP method 1 cách rõ ràng (GET, POST, PUT/PATCH, DELETE)
+  - Biểu diễn resources theo nhiều cách
+  - Stateless - Không lưu trữ trạng thái của client, mọi thứ được lưu trong request
 
 ## CFRS/XSS
 
@@ -140,7 +140,7 @@ end
 - Cung cấp 3 lựa chọn: `module`, `path`, a`s
   - `Module`: chỉ ra `controller` sẽ được chứa trong `module` name nào
   - `Path`: đặt tiền tố sẽ xuất hiện trong URI, trước tên tài nguyên
-  - `As`: thay đổi tên của đường dẫn sử dụng để xác định tài nguyên
+  - `As`: thay đổi tên của đường dẫn sử dụng để xác định tài nguyên (prefix)
 
 - Vậy nên nếu sử dụng:
 
@@ -173,14 +173,14 @@ end
 
 ## Callback
 
-### Vòng đời chạy callback
+### Vòng đời của một đối tượng
 
-...
+![model-life-cycle](public/img/model-life-cycle.png)
 
 ### Mục đích sử dụng của callback
 
-- Callback là một phương thức của `Active Record` trong `model`, nó sẽ được gọi tới vào một thời điểm nào đó trong vòng đời của một đối tượng (create/update/destroy)
-- Callback thường được dùng để thực thi các phương thức logic trước hoặc sau khi đối tượng có một sự thay đổi nào đó
+- Callback là một phương thức của `Active Record` trong `model`, nó sẽ được gọi tới vào một thời điểm nào đó trong vòng đời của một đối tượng
+- Callback thường được dùng để thực thi các logic trước, trong hoặc sau khi đối tượng có một sự thay đổi nào đó
 
 ### Một số loại cơ bản + thứ tự chạy
 
@@ -307,15 +307,15 @@ end
 
 #### Scope trong model
 
-- Scopes là custom queries được định nghĩa trong Rails models với scope method
-- Nhận 2 tham số: tên scope và lambda thực hiện code
-- Bản chất cũng là class method
-- Có thể thêm if và unless check điều kiện
+- `Scopes` là custom queries được định nghĩa trong Rails models với `scope` method
+- Nhận 2 tham số: tên `scope` và `lambda` thực hiện code
+- Bản chất cũng là `class method`
+- Có thể thêm `if` và `unless` check điều kiện
 
 ### Phân biệt scope và class method
 
-- Scope luôn trả về một ActiveRecord:Relation trong khi class method trả về nil
-- Thường sử dụng scope cho những logic đơn giản, class method cho những logic phức tạp hơn
+- `Scope` luôn trả về một ActiveRecord:Relation trong khi `class method` trả về `nil`
+- Thường sử dụng `scope` cho những logic đơn giản, `class method` cho những logic phức tạp hơn
 
 ## Query trong active record
 
@@ -337,10 +337,16 @@ end
 - `find_by` tìm kiếm theo trường nào đó, tìm thấy sẽ trả về 1 object, và sẽ trả về nil nếu không tìm thấy record
 - `find_by!` gióng find_by, nhưng không tìm thấy record sẽ bắn ra exception `ActiveRecord::RecordNotFound`
 
-### Phân biệt update và update_columns
+### Phân biệt các loại update
 
-- `update(attribute_name: value)`: Có kiểm tra `validations` và chạy `callbacks`, trường `updated_at` được cập nhật nếu thành công
-- `update_columns(attribute_name: value)`: Bỏ qua cả `validations` và `callbacks`, trường `updated_at` không được cập nhật
+| Method | Validations | Callbacks | Cập nhật `update_at` | Nhiều thuộc tính | Method với ! | Trả về |
+| --- | --- | --- | --- | --- | --- | --- |
+| update(attr_name: value) | có | có | có | có | có | T/F |
+| update(id, attrs) | có | có | có | có | không | bản ghi |
+| update_attribute(attr_name, value) | không | có | có | không | không | T/F |
+| update_attributes(attr_name: value) | có | có | có | có | có | T/F |
+| update_column(attr_name, value) | không | không | không | không | không | T/F |
+| update_columns(attr_name: value) | không | không | không | có | không | T/F |
 
 ## Delegate
 
@@ -388,7 +394,12 @@ Foo.new.goodbye # => NoMethodError: undefined method `goodbye" for #<Foo:0x1af30
 
 #### Includes
 
-- Includes là tổng hợp của cả 2, Rails sẽ tự lựa chọn sử dụng preload hay eager_load
+- `Includes` là tổng hợp của cả 2, `Rails` sẽ tự lựa chọn sử dụng `preload` hay `eager_load`
+
+### Includes và join
+
+- `join` sẽ dùng `inner join` và trả về những field chung. Không load bảng được join vào memory
+- `includes` dùng `left outer join` trả về tất cả model `includes`. Và bảng được join sẽ load vào memmory
 
 ## Render partial
 
@@ -466,6 +477,16 @@ AJAX (Asynchronous Javascript and XML) là phương thức trao đổi dữ li�
 
 - `Rake` là công cụ để quản lí các task trong `rails`, với mục đích gom nhóm các đoạn code `ruby` thường xuyên được sử dụng vào một task chung để sử dụng lại nhiều lần
 - Mục đích sd: CRUD model không cần viết nhiều lần, liên quan đến db, ...
+
+## Phân biệt form_for, form_tag và form_with trong Rails
+
+- `form_with` được tạo ra để thay thế `form_tag` và `form_for`
+
+| Form method | Tạo đối tượng | SD form builder - field helper | Mặc định chế độ remote |
+| --- | --- | --- | --- |
+| `form_tag` | không | không | không |
+| `form_for` | có | có | không |
+| `form_with` | có | có | có |
 
 ## Rails gem
 
