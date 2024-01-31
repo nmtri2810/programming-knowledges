@@ -6,7 +6,7 @@
 - B2: Checkout branch và làm => nếu đã xong, checkout về main, pull code mới nhất => checkout về branch và rebase main => fix conflict (nếu có)
 - B3: Tạo pull request => check pull teammate nếu làm việc chung => merge và tiếp tục B2
 
-![git flow](public/img/git_flow.png)
+![git flow](public/img/git-flow.png)
 
 - Lưu ý: compare remote mình và remote sun, check từng rules
 
