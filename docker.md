@@ -25,3 +25,11 @@
 
 - `Bind mount`
 - Set it in `compose.yaml` file
+
+## Volumes vs bind mounts vs tmpfs mounts
+
+- `Volumes` are stored in a part of the host filesystem which is managed by Docker. Non-Docker processes should not modify this part of the filesystem. Volumes are the best way to persist data in Docker.
+- `Bind mounts` may be stored anywhere on the host system. They may even be important system files or directories. Non-Docker processes on the Docker host or a Docker container can modify them at any time.
+- `tmpfs` mounts are stored in the host system's memory only, and are never written to the host system's filesystem.
+
+![image](public/img/docker-storage.png)
