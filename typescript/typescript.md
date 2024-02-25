@@ -193,3 +193,5 @@ function logPoint(p: Point) {
 const point = { x: 12, y: 26 };
 logPoint(point);
 ```
+
+<!-- test changes -->
