@@ -1,5 +1,11 @@
 # Javascript
 
+## Single thread - Non blocking
+
+## Event loop
+
+## Event-driven
+
 ## Sync/async, Promise
 
 - Handle **callback hell** problem
@@ -195,5 +201,3 @@ console.log(obj3);
 ### Optional chaining
 
 `?.` (same as Ruby)
-
-## Kiến thức ngoài lề
